@@ -1,0 +1,31 @@
+.code-editor {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #1e1e1e;
+}
+
+.editor-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  background: rgba(0, 255, 65, 0.05);
+  border-bottom: 1px solid var(--cyber-green);
+  font-size: 12px;
+}
+
+.file-path {
+  color: var(--cyber-green);
+  font-weight: 600;
+}
+
+.editor-hint {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+}
+
+.editor-container {
+  flex: 1;
+  overflow: hidden;
+}

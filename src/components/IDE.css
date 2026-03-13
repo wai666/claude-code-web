@@ -1,0 +1,69 @@
+.ide-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-black);
+}
+
+.ide-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: rgba(0, 255, 65, 0.1);
+  border-bottom: 2px solid var(--cyber-green);
+}
+
+.ide-title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 0 10px var(--cyber-green);
+}
+
+.layout-controls {
+  display: flex;
+  gap: 8px;
+}
+
+.layout-controls button {
+  padding: 6px 16px;
+  background: transparent;
+  border: 1px solid var(--cyber-green);
+  color: var(--cyber-green);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-radius: 4px;
+}
+
+.layout-controls button:hover {
+  background: rgba(0, 255, 65, 0.1);
+}
+
+.layout-controls button.active {
+  background: rgba(0, 255, 65, 0.2);
+  box-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+}
+
+.ide-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.terminal-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.terminal-panel.split {
+  flex: 1;
+  border-left: 1px solid var(--cyber-green);
+}
+
+.terminal-panel.terminal {
+  flex: 1;
+}

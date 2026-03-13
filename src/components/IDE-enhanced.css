@@ -1,0 +1,436 @@
+.ide-container {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-black);
+  position: relative;
+  animation: ide-boot 2s ease-out;
+}
+
+@keyframes ide-boot {
+  0% {
+    opacity: 0;
+    filter: blur(10px);
+  }
+  50% {
+    opacity: 0.5;
+    filter: blur(5px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+/* 启动画面 */
+.boot-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--bg-black);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  animation: boot-fadeout 3s ease-out forwards;
+}
+
+@keyframes boot-fadeout {
+  0%, 80% {
+    opacity: 1;
+    pointer-events: all;
+  }
+  100% {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.boot-logo {
+  font-family: 'Orbitron', monospace;
+  font-size: 48px;
+  font-weight: 900;
+  color: var(--cyber-green);
+  text-shadow: var(--glow-green);
+  margin-bottom: 30px;
+  animation: logo-glitch 0.5s infinite;
+}
+
+@keyframes logo-glitch {
+  0%, 90%, 100% {
+    transform: translate(0);
+  }
+  92% {
+    transform: translate(-2px, 2px);
+  }
+  94% {
+    transform: translate(2px, -2px);
+  }
+  96% {
+    transform: translate(-2px, -2px);
+  }
+  98% {
+    transform: translate(2px, 2px);
+  }
+}
+
+.boot-progress {
+  width: 400px;
+  height: 4px;
+  background: rgba(0, 255, 65, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+}
+
+.boot-progress-bar {
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--cyber-green),
+    var(--cyber-blue),
+    var(--cyber-green)
+  );
+  background-size: 200% 100%;
+  box-shadow: var(--glow-green);
+  animation: progress-fill 2.5s ease-out forwards, progress-shimmer 1s linear infinite;
+}
+
+@keyframes progress-fill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+@keyframes progress-shimmer {
+  0% { background-position: 0% 0%; }
+  100% { background-position: 200% 0%; }
+}
+
+.boot-text {
+  margin-top: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  color: var(--cyber-green);
+  font-size: 14px;
+  animation: text-blink 1s infinite;
+}
+
+@keyframes text-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.5; }
+}
+
+/* 工具栏 */
+.ide-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 255, 65, 0.1),
+    rgba(0, 217, 255, 0.1)
+  );
+  border-bottom: 2px solid var(--cyber-green);
+  position: relative;
+  z-index: 100;
+  animation: toolbar-slide 0.8s ease-out 0.5s backwards;
+}
+
+@keyframes toolbar-slide {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 扫描线效果 */
+.ide-toolbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--cyber-green),
+    transparent
+  );
+  animation: scan-horizontal 3s linear infinite;
+}
+
+@keyframes scan-horizontal {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.ide-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-shadow: var(--glow-green);
+  position: relative;
+  animation: title-flicker 4s infinite;
+}
+
+.ide-title::before {
+  content: '◢◣';
+  margin-right: 12px;
+  color: var(--cyber-blue);
+  animation: icon-rotate 3s linear infinite;
+}
+
+@keyframes icon-rotate {
+  0%, 100% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+}
+
+@keyframes title-flicker {
+  0%, 100% {
+    text-shadow: var(--glow-green);
+  }
+  50% {
+    text-shadow: 0 0 5px var(--cyber-green), 0 0 15px var(--cyber-green), 0 0 30px var(--cyber-green);
+  }
+}
+
+.layout-controls {
+  display: flex;
+  gap: 12px;
+}
+
+.layout-controls button {
+  font-family: 'Orbitron', monospace;
+  padding: 8px 20px;
+  background: transparent;
+  border: 2px solid var(--cyber-green);
+  color: var(--cyber-green);
+  font-size: 11px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.layout-controls button::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, var(--cyber-green), transparent);
+  transform: translate(-50%, -50%);
+  transition: width 0.5s ease, height 0.5s ease;
+  opacity: 0.3;
+}
+
+.layout-controls button:hover::before {
+  width: 300px;
+  height: 300px;
+}
+
+.layout-controls button:hover {
+  background: rgba(0, 255, 65, 0.1);
+  box-shadow: var(--glow-green);
+  transform: translateY(-2px);
+}
+
+.layout-controls button.active {
+  background: rgba(0, 255, 65, 0.2);
+  box-shadow: var(--glow-green), inset 0 0 20px rgba(0, 255, 65, 0.3);
+  border-color: var(--cyber-blue);
+  color: var(--cyber-blue);
+  animation: active-pulse 2s infinite;
+}
+
+@keyframes active-pulse {
+  0%, 100% {
+    box-shadow: var(--glow-green), inset 0 0 20px rgba(0, 255, 65, 0.3);
+  }
+  50% {
+    box-shadow: var(--glow-blue), inset 0 0 30px rgba(0, 217, 255, 0.5);
+  }
+}
+
+.layout-controls button:active {
+  transform: translateY(0);
+  box-shadow: 0 0 5px var(--cyber-green);
+}
+
+/* 主内容区 */
+.ide-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  position: relative;
+  animation: content-fadein 1s ease-out 1s backwards;
+}
+
+@keyframes content-fadein {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 分隔线 */
+.ide-content > * + * {
+  border-left: 2px solid var(--cyber-green);
+  box-shadow: -2px 0 10px rgba(0, 255, 65, 0.3);
+  position: relative;
+}
+
+.ide-content > * + *::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--cyber-blue),
+    transparent
+  );
+  animation: divider-scan 3s linear infinite;
+}
+
+@keyframes divider-scan {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+.terminal-panel {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.terminal-panel.split {
+  flex: 1;
+}
+
+.terminal-panel.terminal {
+  flex: 1;
+}
+
+/* 状态栏 */
+.status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 20px;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 255, 65, 0.05),
+    rgba(0, 217, 255, 0.05)
+  );
+  border-top: 1px solid var(--cyber-green);
+  font-size: 11px;
+  color: var(--cyber-green);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.status-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px;
+  background: rgba(0, 255, 65, 0.1);
+  border-radius: 3px;
+  border: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.status-item::before {
+  content: '●';
+  color: var(--cyber-green);
+  animation: status-blink 2s infinite;
+}
+
+@keyframes status-blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0.3; }
+}
+
+/* 悬浮提示 */
+.tooltip {
+  position: absolute;
+  background: rgba(10, 10, 10, 0.95);
+  border: 1px solid var(--cyber-green);
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--cyber-green);
+  box-shadow: var(--glow-green);
+  pointer-events: none;
+  z-index: 10000;
+  animation: tooltip-appear 0.2s ease-out;
+}
+
+@keyframes tooltip-appear {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 通知系统 */
+.notification {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(10, 10, 10, 0.95);
+  border: 2px solid var(--cyber-green);
+  border-radius: 8px;
+  padding: 16px 20px;
+  min-width: 300px;
+  box-shadow: var(--glow-green), 0 0 50px rgba(0, 255, 65, 0.3);
+  z-index: 10000;
+  animation: notification-slide 0.5s ease-out;
+}
+
+@keyframes notification-slide {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.notification.success {
+  border-color: var(--cyber-green);
+}
+
+.notification.error {
+  border-color: var(--cyber-pink);
+}
+
+.notification.info {
+  border-color: var(--cyber-blue);
+}
