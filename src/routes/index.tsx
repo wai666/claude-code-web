@@ -1,5 +1,8 @@
 import { createSignal } from 'solid-js';
 
+// 禁用此页面的 SSR，避免 hydration 错误
+export const ssr = false;
+
 interface Message {
   id: string;
   role: 'user' | 'assistant';
