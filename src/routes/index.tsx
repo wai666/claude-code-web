@@ -27,10 +27,6 @@ export default function Home() {
     e.preventDefault();
     const text = input();
 
-    alert('开始提交: ' + text);
-    console.log('=== SUBMIT ===');
-    console.log('Input value:', text);
-
     if (!text.trim()) return;
 
     // 添加用户消息
