@@ -13,7 +13,7 @@ interface Message {
 }
 
 export default function Terminal() {
-  const [model, setModel] = createSignal<Model>('opus');
+  const [model, setModel] = createSignal<Model>('sonnet');
   const [commandMode, setCommandMode] = createSignal(false);
   const [runningProcesses, setRunningProcesses] = createSignal<string[]>([]);
   const [messages, setMessages] = createSignal<Message[]>([]);
@@ -69,17 +69,8 @@ export default function Terminal() {
   });
 
   const handleSubmit = async (text: string, context: string) => {
-    console.log('=== handleSubmit DEBUG ===');
-    console.log('text:', text);
-    console.log('text type:', typeof text);
-    console.log('text constructor:', text?.constructor?.name);
-    console.log('context:', context);
-    console.log('========================');
-
-    // 如果 text 是 Event 对象，说明调用方式错误
     if (typeof text !== 'string') {
       console.error('ERROR: handleSubmit received non-string:', text);
-      alert('错误：收到了非字符串参数。请查看控制台。');
       return;
     }
 
@@ -102,7 +93,7 @@ export default function Terminal() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('/api/chat-simple', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -116,6 +107,7 @@ export default function Terminal() {
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let assistantContent = '';
+      let buffer = '';
 
       const assistantMsg: Message = {
         id: (Date.now() + 1).toString(),
@@ -129,24 +121,30 @@ export default function Terminal() {
         const { done, value } = await reader.read();
         if (done) break;
 
-        const chunk = decoder.decode(value);
-        const lines = chunk.split('\n').filter(line => line.trim());
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || '';
 
         for (const line of lines) {
-          if (line.startsWith('data: ')) {
-            const data = line.slice(6);
-            if (data === '[DONE]') continue;
+          if (!line.trim()) continue;
 
+          // Vercel AI SDK 格式: 0:"text"
+          if (line.startsWith('0:')) {
             try {
-              const parsed = JSON.parse(data);
-              if (parsed.content) {
-                assistantContent += parsed.content;
-                setMessages(prev => {
-                  const updated = [...prev];
-                  updated[updated.length - 1].content = assistantContent;
-                  return updated;
-                });
-              }
+              const jsonStr = line.slice(2);
+              const text = JSON.parse(jsonStr);
+              assistantContent += text;
+              setMessages(prev => {
+                const updated = [...prev];
+                updated[updated.length - 1].content = assistantContent;
+                return updated;
+              });
+            } catch (e) {
+              console.error('Parse error:', e);
+            }
+          }
+        }
+      }
             } catch (e) {
               console.error('Parse error:', e);
             }
